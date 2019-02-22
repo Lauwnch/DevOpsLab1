@@ -1,0 +1,18 @@
+#Playbook to provision EC2 instance to a Jenkins Master
+- name: Import credentials for Jenkins server
+
+#For now need to configure through GUI (Jenkins 2.0 requirement)
+#Eventually can use Groovy Script to automate config, see:
+#https://stackoverflow.com/questions/36604504/configure-jenkins-2-0-with-ansible
+#https://www.hogarthuk.com/?q=node/19
+- name: Deploy Jenkins Master
+	hosts: jenkins_master
+	remote_user: ec2_user
+	become: yes
+
+	roles:
+		geerlingguy-jenkins
+    geerlingguy-git
+		geerlingguy-ansible
+
+#- Clone Ansible Deployment Playbooks

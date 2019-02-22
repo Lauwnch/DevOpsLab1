@@ -1,0 +1,28 @@
+- name: Initialize | Run Updates
+	apt:
+		update_cache: yes
+		upgrade: yes
+
+- name: User Management | Create service group
+  group:
+    name: services
+    state: present
+
+
+- name: User Management | Add service group to sudoers
+  lineinfile:
+    path: /etc/sudoers.d
+    state: present
+    line: "#services ALL=(ALL) NOPASSWD: ALL"
+    create: yes
+
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: "^#includedir"
+    line: "#includedir /etc/sudoers.d" 
+
+
+
+
+

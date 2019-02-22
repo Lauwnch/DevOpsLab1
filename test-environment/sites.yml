@@ -1,0 +1,15 @@
+# hosts:
+
+  roles:
+    initialize-common-server
+
+# hosts: jenkins-master
+  # 
+  # roles:
+    # initialize-jenkins-master
+
+# hosts: jenkins-workers
+  # 
+  # roles:
+    # initialize-jenkins-worker
+
