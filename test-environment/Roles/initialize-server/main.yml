@@ -3,24 +3,38 @@
 		update_cache: yes
 		upgrade: yes
 
-- name: User Management | Create service group
+- name: User Management | Create admin group
   group:
-    name: services
+    name: admins
     state: present
 
+- name: User Management | Create/Add provision User
+  user:
+    name: provision
+    state: present
+    group: admins
+    create_home: yes
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+
+  authorized_keys:
+    user: provision
+    state: present
+    key: {{ public_key }}
 
 - name: User Management | Add service group to sudoers
   lineinfile:
     path: /etc/sudoers.d
     state: present
-    line: "#services ALL=(ALL) NOPASSWD: ALL"
+    line: "%admins ALL=(ALL) NOPASSWD: ALL"
     create: yes
 
   lineinfile:
     path: /etc/sudoers
     state: present
     regexp: "^#includedir"
-    line: "#includedir /etc/sudoers.d" 
+    line: "#includedir /etc/sudoers.d"
 
 
 
