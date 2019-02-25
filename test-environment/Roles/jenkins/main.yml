@@ -1,18 +1,38 @@
 #Playbook to provision EC2 instance to a Jenkins Master
-- name: Import credentials for Jenkins server
 
 #For now need to configure through GUI (Jenkins 2.0 requirement)
 #Eventually can use Groovy Script to automate config, see:
 #https://stackoverflow.com/questions/36604504/configure-jenkins-2-0-with-ansible
 #https://www.hogarthuk.com/?q=node/19
-- name: Deploy Jenkins Master
-	hosts: jenkins_master
-	remote_user: ec2_user
-	become: yes
+- name: Install Jenkins, Git, Ansible
+    hosts: jenkins_master
+    remote_user: provision
+    become: yes
+    roles:
+      geerlingguy-jenkins
+      geerlingguy-git
+      geerlingguy-ansible
 
-	roles:
-		geerlingguy-jenkins
-    geerlingguy-git
-		geerlingguy-ansible
+- name: Create/Add Jenkins user
+    user: Jenkins
+      state: present
+      group: jenkins #I think this is the req, will need to check Amazon docs
+      create_home: yes
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/jenkins-master
 
+- name: Create user deployer
+    user: deployer
+      state: present
+      group: admins
+      create_home: yes
+
+- name: Provide user deployer private key #TO-DO gen deployer keypair on JM server, and have another play to copy it to all deploy users
+    copy:
+      src: ~/.ssh/deployer
+      dest: ~/.ssh/deployer
+      mode: 0600
+      owner: deployer
+      force: no
 #- Clone Ansible Deployment Playbooks
