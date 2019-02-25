@@ -3,10 +3,26 @@
 		update_cache: yes
 		upgrade: yes
 
+#Makes groups for sys admin and Ansible to use in the future
 - name: User Management | Create admin group
   group:
     name: admins
     state: present
+
+- name: User Management | Create/Add sys admin User
+  user:
+    name: manager
+    state: present
+    group: admins
+    create_home: yes
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+
+  authorized_keys:
+    user: provision
+    state: present
+    key: {{ aws_public_key }}
 
 - name: User Management | Create/Add provision User
   user:
