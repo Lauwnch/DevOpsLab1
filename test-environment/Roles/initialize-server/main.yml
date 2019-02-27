@@ -1,3 +1,4 @@
+#Get server ready for *whatever*
 - name: Initialize | Run Updates
 	apt:
 		update_cache: yes
@@ -22,20 +23,21 @@
         regexp: "^#includedir"
         line: "#includedir /etc/sudoers.d"
 
-- name: User Management | Create/Add sys admin User
-  user:
-    name: manager
-    state: present
-    group: admins
-    create_home: yes
-    generate_ssh_key: yes
-    ssh_key_bits: 2048
-    ssh_key_file: .ssh/id_rsa
+- name: User Management | Create/Add admin User
+    user:
+        name: manager
+        state: present
+        group: admins
+        create_home: yes
+        generate_ssh_key: yes
+        ssh_key_bits: 2048
+        ssh_key_file: .ssh/id_rsa
 
-  authorized_keys:
-    user: provision
-    state: present
-    key: {{ aws_public_key }}
+- name: User Management | Add public key for admin
+    authorized_keys:
+        user: provision
+        state: present
+        key: {{ aws_public_key }}
 
 - name: User Management | Create/Add provision User
     user:
@@ -63,3 +65,5 @@
         state: present
         key: "{{ lookup('file', '~/.ssh/deployer.pub') }}"
 
+
+#Add security features (fail2ban, SELinux)

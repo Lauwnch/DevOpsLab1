@@ -13,6 +13,7 @@
       geerlingguy-git
       geerlingguy-ansible
 
+#this is already made by geerlingguy
 - name: Create/Add Jenkins user
     user: Jenkins
       state: present
