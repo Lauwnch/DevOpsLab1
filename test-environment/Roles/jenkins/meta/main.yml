@@ -1,0 +1,5 @@
+dependencies:
+	- role: geerlingguy.jenkins
+	- role: geerlingguy-git
+  - role: geerlingguy-ansible
+      

@@ -1,17 +1,13 @@
 #Playbook to provision EC2 instance to a Jenkins Master
+#Bulk of work is done by geerlinguy.Jenkins, which is included in dependencies and installed in default ansible-galaxy location
 
 #For now need to configure through GUI (Jenkins 2.0 requirement)
 #Eventually can use Groovy Script to automate config, see:
 #https://stackoverflow.com/questions/36604504/configure-jenkins-2-0-with-ansible
 #https://www.hogarthuk.com/?q=node/19
-- name: Install Jenkins, Git, Ansible
-    hosts: jenkins_master
-    remote_user: provision
-    become: yes
-    roles:
-      geerlingguy-jenkins
-      geerlingguy-git
-      geerlingguy-ansible
+hosts: jenkins_master
+remote_user: provision
+become: yes
 
 #this is already made by geerlingguy
 - name: Create/Add Jenkins user

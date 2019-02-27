@@ -2,7 +2,7 @@
   remote_user: ec2-user
   become: yes
   roles:
-    initialize-common-server
+    - initialize-server
 
 hosts: jenkins-master
   # remote_user: provision
