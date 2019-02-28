@@ -1,17 +1,17 @@
-# hosts:
-  remote_user: ec2-user
+- name: initialize all servers
+  hosts: all
+  remote_user: ubuntu
   become: yes
   roles:
     - initialize-server
 
-hosts: jenkins-master
+#hosts: jenkins-master
   # remote_user: provision
   # become: yes
   # roles:
-    # initialize-jenkins-master
+    - geerlingguy.jenkins
 
-# hosts: jenkins-workers
+# hosts: databases
   # 
   # roles:
-    # initialize-jenkins-worker
 

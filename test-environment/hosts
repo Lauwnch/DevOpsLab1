@@ -1,0 +1,10 @@
+[jenkins-masters]
+
+[databases]
+
+[webservers]
+
+[app-workers]
+
+[jenkins-masters:vars]
+ansible_python_interpreter=/usr/bin/python3

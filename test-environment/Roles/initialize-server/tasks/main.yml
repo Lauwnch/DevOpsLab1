@@ -1,69 +1,70 @@
 #Get server ready for *whatever*
 - name: Initialize | Run Updates
-	apt:
-		update_cache: yes
-		upgrade: yes
+  apt:
+    update_cache: yes
+    upgrade: yes
 
 #Makes groups for sys admin and Ansible to use in the future
 - name: User Management | Create admin group
-    group:
-        name: admins
-        state: present
+  group:
+    name: admins
+    state: present
 
 - name: User Management | Add admin group to sudoers
-    lineinfile:
-        path: /etc/sudoers.d
-        state: present
-        line: "%admins ALL=(ALL) NOPASSWD: ALL"
-        create: yes
+  lineinfile:
+    path: /etc/sudoers.d/01-admin
+    create: yes
+    state: present
+    line: "%admins ALL=(ALL) NOPASSWD: ALL"
 
-    lineinfile:
-        path: /etc/sudoers
-        state: present
-        regexp: "^#includedir"
-        line: "#includedir /etc/sudoers.d"
+- name: User Management | Ensure sudoers list is included
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: "^#includedir"
+    line: "#includedir /etc/sudoers.d"
 
 - name: User Management | Create/Add admin User
-    user:
-        name: manager
-        state: present
-        group: admins
-        create_home: yes
-        generate_ssh_key: yes
-        ssh_key_bits: 2048
-        ssh_key_file: .ssh/id_rsa
+  user:
+    name: administrator
+    state: present
+    group: admins
+    create_home: yes
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
 
 - name: User Management | Add public key for admin
-    authorized_keys:
-        user: provision
-        state: present
-        key: {{ aws_public_key }}
+  authorized_key:
+    user: administrator
+    state: present
+    key: "{{ lookup('file', '~/.ssh/worktop-key.pub') }}"
 
 - name: User Management | Create/Add provision User
-    user:
-        name: provision
-        state: present
-        group: admins
-        create_home: yes
+  user:
+    name: provision
+    state: present
+    group: admins
+    create_home: yes
 
 - name: User Management | Add public key for provsion
-    authorized_keys:
-        user: provision
-        state: present
-        key: "{{ lookup('file', '~/.ssh/provisioner.pub') }}"
+  authorized_key:
+    user: provision
+    state: present
+    key: "{{ lookup('file', '~/.ssh/worktop-key.pub') }}"
 
 - name: User Management | Create/Add deploy User
-    user:
-        name: deploy
-        state: present
-        group: admins
-        create_home: yes
+  user:
+    name: deploy
+    state: present
+    group: admins
+    create_home: yes
 
 - name: User Management | Add public key for deploy #TO-DO put this in another play to run after JM server is provisioned
-    authorized_keys:
-        user: deploy
-        state: present
-        key: "{{ lookup('file', '~/.ssh/deployer.pub') }}"
+  authorized_key:
+    user: deploy
+    state: present
+    key: "{{ lookup('file', '~/.ssh/worktop-key.pub') }}"
 
 
 #Add security features (fail2ban, SELinux)

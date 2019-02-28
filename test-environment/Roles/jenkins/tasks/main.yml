@@ -5,9 +5,7 @@
 #Eventually can use Groovy Script to automate config, see:
 #https://stackoverflow.com/questions/36604504/configure-jenkins-2-0-with-ansible
 #https://www.hogarthuk.com/?q=node/19
-hosts: jenkins_master
-remote_user: provision
-become: yes
+
 
 #this is already made by geerlingguy
 - name: Create/Add Jenkins user
