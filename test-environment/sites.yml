@@ -1,3 +1,4 @@
+---
 - name: initialize all servers
   hosts: all
   remote_user: ubuntu
@@ -5,13 +6,15 @@
   roles:
     - initialize-server
 
-#hosts: jenkins-master
-  # remote_user: provision
-  # become: yes
-  # roles:
+- name: deploy Jenkins master server(s)
+  hosts: jenkins-masters
+  remote_user: provision
+  become: yes
+  roles:
     - geerlingguy.jenkins
 
 # hosts: databases
-  # 
-  # roles:
+#
+# roles:
 
+---

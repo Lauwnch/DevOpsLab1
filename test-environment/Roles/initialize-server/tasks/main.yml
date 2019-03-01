@@ -1,10 +1,11 @@
-#Get server ready for *whatever*
+# Get server ready for *whatever*
+---
 - name: Initialize | Run Updates
   apt:
     update_cache: yes
     upgrade: yes
 
-#Makes groups for sys admin and Ansible to use in the future
+# Makes groups for sys admin and Ansible to use in the future
 - name: User Management | Create admin group
   group:
     name: admins
@@ -60,11 +61,12 @@
     group: admins
     create_home: yes
 
-- name: User Management | Add public key for deploy #TO-DO put this in another play to run after JM server is provisioned
+# TO-DO put this in another play to run after JM server is provisioned
+- name: User Management | Add public key for deploy
   authorized_key:
     user: deploy
     state: present
     key: "{{ lookup('file', '~/.ssh/worktop-key.pub') }}"
 
-
-#Add security features (fail2ban, SELinux)
+# Add security features (fail2ban, SELinux)
+---
