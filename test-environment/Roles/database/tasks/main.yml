@@ -1,0 +1,11 @@
+---
+# Playbook to provision database server for either test or prod.
+# mySQL installation and initial user creation is handled by geerlingguy role
+# This role will seek to:
+# - add necessary OS accounts/keys for remote access
+# - create necessary databases in MySQL (if Rails is not better suited to this)
+# - set up backup and recovery procedures
+# - potentially set up mirroring
+
+
+---

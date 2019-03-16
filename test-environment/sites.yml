@@ -12,9 +12,13 @@
   become: yes
   roles:
     - geerlingguy.jenkins
+    - jenkins
 
-# hosts: databases
-#
-# roles:
+- name: deploy MySQL database(s)
+  hosts: databases
+  roles:
+    - geerlingguy.MySQL
+    - database
+  vars: ~/varsfile  # change this obviously
 
 ---
