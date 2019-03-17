@@ -19,6 +19,5 @@
   roles:
     - geerlingguy.MySQL
     - database
-  vars: ~/varsfile  # change this obviously
 
 ---

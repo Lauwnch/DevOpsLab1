@@ -1,0 +1,14 @@
+---
+mysql_root_password: root
+mysql_databases
+  - name: testdb
+mysql_users
+  - name: appuser
+    host: "%"  #TO-DO change to dynamically follow appserver IP
+    priv: 'library_test:ALL/library_production:ALL/library_development:ALL'
+    password: appuser  #TO-DO encrypt in Vault
+  - name: dba
+    host: "127.0.0.1"
+    priv: '*.*:ALL'
+    password: superSecurePassword
+---
