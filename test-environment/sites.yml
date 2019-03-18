@@ -16,8 +16,8 @@
 
 - name: deploy MySQL database(s)
   hosts: databases
+  remote_user: provision
+  become: yes
   roles:
-    - geerlingguy.MySQL
+    - geerlingguy.mysql
     - database
-
----

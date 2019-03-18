@@ -1,6 +1,8 @@
 [jenkins-masters]
+35.167.145.53
 
 [databases]
+34.215.51.209
 
 [webservers]
 

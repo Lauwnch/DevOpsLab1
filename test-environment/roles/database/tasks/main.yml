@@ -10,11 +10,8 @@
 - name: Database | Add recommended databases for Rails
   mysql_db:
     name: "{{ item }}"
-    collation: utf8_general_ci
-    encoding: utf8
     state: present
   loop:
     - library_development
     - library_test
     - library_production
----

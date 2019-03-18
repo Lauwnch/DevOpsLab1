@@ -17,12 +17,11 @@
 
 # TO-DO gen deployer keypair on JM server, and have another play to
 # copy it to all deploy users
-- name: Provide user deployer private key
-  copy:
-    src: ~/.ssh/deployer
-    dest: ~/.ssh/deployer
-    mode: 0600
-    owner: deployer
-    force: no
+# - name: Provide user deployer private key
+#   copy:
+#     src: ~/.ssh/deployer
+#     dest: ~/.ssh/deployer
+#     mode: 0600
+#     owner: deployer
+#     force: no
 # - Clone Ansible Deployment Playbooks
----

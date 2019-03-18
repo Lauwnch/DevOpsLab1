@@ -69,4 +69,3 @@
     key: "{{ lookup('file', '~/.ssh/worktop-key.pub') }}"
 
 # Add security features (fail2ban, SELinux)
----
