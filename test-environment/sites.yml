@@ -6,7 +6,7 @@
   roles:
     - initialize-server
 
-- name: deploy Jenkins master server(s)
+- name: provision Jenkins master server(s)
   hosts: jenkins-masters
   remote_user: provision
   become: yes
@@ -14,10 +14,17 @@
     - geerlingguy.jenkins
     - jenkins
 
-- name: deploy MySQL database(s)
+- name: provision MySQL database(s)
   hosts: databases
   remote_user: provision
   become: yes
   roles:
     - geerlingguy.mysql
     - database
+
+#TODO check whether these are ideal user
+- name: provision Rails server
+  hosts:
+  remote_user: app-user
+  roles:
+    - rails

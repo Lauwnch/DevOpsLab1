@@ -1,0 +1,93 @@
+---
+# TODO check whether these are ideal users
+- name: Ruby Install | Install build tools
+  apt:
+    force_apt_get: yes
+    name: build-essential
+    update-cache: yes
+  become: yes
+
+# chruby unneccessary for this example
+# TODO grab checksum
+# TODO use variable for ruby-install version
+- name: Ruby Install | Get ruby-install files
+  get_url:
+    url: https://github.com/postmodern/ruby-install/archive/v0.6.1.tar.gz
+    dest: /Home/provision/ruby-install-0.6.1.tar.gz
+
+- name: Ruby Install | Extract ruby-install
+  unarchive:
+    remote_src: yes
+    src: /Home/app-user/ruby-install-0.6.1.tar.gz
+    dest: /Home/app-user/  # might need to make this its own dir
+    owner: app-user
+
+- name: Ruby Install | Compile ruby-install
+  make:
+    chdir: /Home/app-user/ruby-install-0.6.1
+    target: install
+  become: yes
+
+- name: Ruby Install | Run ruby-install
+  command: ruby-install ruby 2.4.1
+
+- name: NodeJS Install | Add repo key
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+  become: yes
+
+# TODO made version and distro variables
+- name: NodeJS Install | Add NodeSource repo 1
+  apt_repository:
+    repo: deb https://deb.nodesource.com/$VERSION $DISTRO main
+    state: present
+  become: yes
+
+- name: NodeJS Install | Add NodeSource repo 2
+  apt_repository:
+    repo: deb-src https://deb.nodesource.com/$VERSION $DISTRO main
+    state: present
+  become: yes
+
+- name: NodeJS Install | Install nodejs
+  apt:
+    force_apt_get: yes
+    name: nodejs
+  become: yes
+
+# TODO make rails version a variable
+- name: Rails Install | Install Rails
+  gem:
+    name: rails
+    version: 5.2.3
+    state: present
+
+- name: Rails Install | Confirm bundler install
+  gem:
+    name: bundler
+    state: latest
+
+# TODO make variable for which SQL server type
+- name: App Dependencies | Install database dependencies
+  apt:
+    force_apt_get: yes
+    name: libmysqlclient-dev
+    become: yes
+
+- name: App Dependencies | Add yarn repo key
+  apt_key:
+    url: https://dl.yarnpkg.com/debian/pubkey.gpg
+    state: present
+  become: yes
+
+- name: App Dependencies | Add yarn repo
+  apt_repository:
+    repo: deb https://dl.yarnpkg.com/debian/ stable main
+    state: present
+  become: yes
+
+- name: App Dependencies | Install yarn
+  apt:
+    force_apt_get: yes
+    name: yarn
+  become: yes
