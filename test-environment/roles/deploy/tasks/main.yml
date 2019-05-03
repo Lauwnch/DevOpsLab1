@@ -1,0 +1,31 @@
+# Clone application repo and run any initial tasks necessary
+---
+- name: Deploy | Clone app repo
+  git:
+    accept_hostkey: yes  # I don't feel like adding to knownhosts cuz lazy
+    repo: https://github.com/gbarillot/rails-vue-demo-app.git
+    dest: ~
+
+- name: Deploy | Set app parameters in web server
+
+- name: Deploy | Run Bundler
+  bundler:
+    state: present
+    chdir: ~/rails-vue-demo-app
+
+# Note: if not work, see depsin mod docs
+- name: Deploy | Run yarn
+  yarn:
+    state: present
+    path: ~/rails-vue-demo-app
+
+# Might need environment set?
+- name: Deploy | Migrate DB
+  shell: bundle exec rake db:migrate
+  args:
+    chdir: ~/rails-vue-demo-app
+
+- name: Deploy | Seed DB
+  shell: bundle exec rake db:seed
+  args:
+    chdir: ~/rails-vue-demo-app

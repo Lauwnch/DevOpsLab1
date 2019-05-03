@@ -28,3 +28,4 @@
   remote_user: app-user
   roles:
     - rails
+    - deploy
