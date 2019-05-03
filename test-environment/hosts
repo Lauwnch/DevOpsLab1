@@ -1,10 +1,13 @@
 [jenkins-masters]
-35.167.145.53
+34.217.178.129
 
 [databases]
-34.215.51.209
+34.220.226.52
 
 [webservers]
+
+[appservers]
+34.220.226.52
 
 [app-workers]
 

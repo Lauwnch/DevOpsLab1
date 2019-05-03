@@ -24,8 +24,8 @@
 
 #TODO check whether these are ideal user
 - name: provision Rails server
-  hosts:
-  remote_user: app-user
+  hosts: appservers
+  remote_user: provision
   roles:
     - rails
     - deploy
