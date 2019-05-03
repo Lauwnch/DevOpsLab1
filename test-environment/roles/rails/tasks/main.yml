@@ -13,23 +13,27 @@
 - name: Ruby Install | Get ruby-install files
   get_url:
     url: https://github.com/postmodern/ruby-install/archive/v0.6.1.tar.gz
-    dest: /Home/provision/ruby-install-0.6.1.tar.gz
+    dest: /home/provision/ruby-install-0.6.1.tar.gz
+  register: ruby_install
 
 - name: Ruby Install | Extract ruby-install
   unarchive:
     remote_src: yes
-    src: /Home/app-user/ruby-install-0.6.1.tar.gz
-    dest: /Home/app-user/  # might need to make this its own dir
-    owner: app-user
+    src: /home/provision/ruby-install-0.6.1.tar.gz
+    dest: /home/provision  # might need to make this its own dir
+    owner: provision
+  when: ruby_install.changed
 
 - name: Ruby Install | Compile ruby-install
   make:
-    chdir: /Home/app-user/ruby-install-0.6.1
+    chdir: /home/provision/ruby-install-0.6.1
     target: install
   become: yes
+  when: ruby_install.changed
 
 - name: Ruby Install | Run ruby-install
-  command: ruby-install ruby 2.4.1
+  command: sudo ruby-install --system ruby 2.4.1
+  when: ruby_install.changed
 
 - name: NodeJS Install | Add repo key
   apt_key:
@@ -37,16 +41,13 @@
   become: yes
 
 # TODO made version and distro variables
-- name: NodeJS Install | Add NodeSource repo 1
+- name: NodeJS Install | Add NodeSource repos
   apt_repository:
-    repo: deb https://deb.nodesource.com/$VERSION $DISTRO main
+    repo: "{{ item }}"
     state: present
-  become: yes
-
-- name: NodeJS Install | Add NodeSource repo 2
-  apt_repository:
-    repo: deb-src https://deb.nodesource.com/$VERSION $DISTRO main
-    state: present
+  with_items:
+    - deb https://deb.nodesource.com/node_{{ node_version }} {{ ansible_distribution_release }} main
+    - deb-src https://deb.nodesource.com/node_{{ node_version }} {{ ansible_distribution_release }} main
   become: yes
 
 - name: NodeJS Install | Install nodejs
@@ -55,6 +56,11 @@
     name: nodejs
   become: yes
 
+- name: Rails Install | Confirm bundler install
+  gem:
+    name: bundler
+    state: latest
+
 # TODO make rails version a variable
 - name: Rails Install | Install Rails
   gem:
@@ -62,17 +68,12 @@
     version: 5.2.3
     state: present
 
-- name: Rails Install | Confirm bundler install
-  gem:
-    name: bundler
-    state: latest
-
 # TODO make variable for which SQL server type
 - name: App Dependencies | Install database dependencies
   apt:
     force_apt_get: yes
     name: libmysqlclient-dev
-    become: yes
+  become: yes
 
 - name: App Dependencies | Add yarn repo key
   apt_key:

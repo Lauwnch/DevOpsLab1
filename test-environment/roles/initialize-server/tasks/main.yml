@@ -4,6 +4,7 @@
   apt:
     update_cache: yes
     upgrade: yes
+    force_apt_get: yes
 
 # Makes groups for sys admin and Ansible to use in the future
 - name: User Management | Create admin group
