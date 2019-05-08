@@ -44,11 +44,19 @@ resource "aws_security_group" "front" {
   }
 
   egress {
-    //HTTP outbound
+    //HTTPs outbound
     protocol    = "tcp"
     from_port   = "443"
     to_port     = "443"
     cidr_blocks = "0.0.0.0/0"
+  }
+
+  egress {
+    // HTTP outbound
+    protocol       = "tcp"
+    from_port      = "80"
+    to_port        = "80"
+    security_group = "${ aws_security_group.app.id }"
   }
 
   egress {

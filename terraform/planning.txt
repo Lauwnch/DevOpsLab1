@@ -1,0 +1,78 @@
+???????????????????????
+-Create NAT in passenger-server, or front-end?
+	-Probably front-end
+
+Front-end - 
+	Definition: NGINX reverse proxy instance(s), redis cache instance(s), IGW, NAT, front security group, route table for public subnet
+	Input:
+		- VPC.id
+		x security_group.bastion.id
+		x security_group.db.id ??
+		x security_group.app.id
+
+		- subnet.public.id
+		
+		- ami.proxy
+		- ami.redis
+
+		- number of NGINX
+		- number of redis
+		- NAT true/false
+
+	Output:
+		- security_group.front.id
+		- instance(s).private_ip [[for Ansible inventory]]
+
+Bastion -
+	Definition: gateway for backend SSH and config management stuff
+	Input:
+		- VPC.id
+		x security_group.app.id
+		x security_group.front.id
+		x security_group.db.id
+
+		- subnet.public.id
+
+		- ami.proxy
+
+		- we gon' stick with 1 on this one
+
+	Output:
+		- security_group.bastion.id
+		- instance(s).private_ip [[for Ansible inventory]]		
+
+Back-Rails-Application -
+	Definition: passenger instance(s) for running Rails applications, security group for these, route table for private subnet
+	Input:
+		- VPC.id
+		x security_group.bastion.id
+		x security_group.front.id
+		x security_group.db.id
+
+		- subnet.private.id
+
+		- ami.application
+
+		- use existing NAT = true/false, nat.id
+			- depends on internet gateway
+		- number of passenger instances
+	Output:
+		- security_group.app.id
+		- instance(s).private_ip [[for Ansible inventory]]
+
+MySQL-database -
+	Input: you know what it is
+		- VPC.id
+		x security_group.bastion.id
+		x security_group.front.id
+		x security_group.app.id
+
+		- subnet.private.id
+
+		- ami.database
+
+		- use existing NAT = true/false, nat.id
+		- we're gonna make this a consistent 1 or 2 to start, so no # param
+	Output:
+		- security_group.db.id
+		- instance(s).private_ip [[for Ansible inventory]]
