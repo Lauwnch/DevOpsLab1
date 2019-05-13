@@ -12,23 +12,25 @@
 		- subnet.public.id
 		- subnet.private.id
 		- vpc.id
+		- igw.id
 
 Front-end - 
 	Definition: NGINX reverse proxy instance(s), redis cache instance(s), IGW, NAT, front security group, route table for public subnet
 	Input:
-		x VPC.id
-		x security_group.bastion.id
-		x security_group.db.id ??
-		x security_group.app.id
+		- VPC.id*
+		x security_group.bastion.id*
+		x security_group.db.id ??*
+		x security_group.app.id*
 
-		x subnet.public.id
+		x subnet.public.id*
 		
-		- ami.proxy
-		- ami.redis
+		- ami.proxy*
+		- ami.redis*
 
-		- number of NGINX
-		- number of redis
-		- NAT true/false
+		- number of NGINX*
+		- number of redis*
+		- NAT true/false*
+		- IGW.id*
 
 	Output:
 		- security_group.front.id
@@ -37,16 +39,16 @@ Front-end -
 Bastion -
 	Definition: gateway for backend SSH and config management stuff
 	Input:
-		x VPC.id
-		x security_group.app.id
-		x security_group.front.id
-		x security_group.db.id
+		x VPC.id*
+		x security_group.app.id*
+		x security_group.front.id*
+		x security_group.db.id*
 
-		x subnet.public.id
+		x subnet.public.id*
 
-		- ami.proxy
+		- ami.bastion*
 
-		- we gon' stick with 1 on this one
+		- we gon' stick with 1 on this one*
 
 	Output:
 		- security_group.bastion.id
@@ -55,35 +57,35 @@ Bastion -
 Back-Rails-Application -
 	Definition: passenger instance(s) for running Rails applications, security group for these, route table for private subnet
 	Input:
-		x VPC.id
-		x security_group.bastion.id
-		x security_group.front.id
-		x security_group.db.id
+		x VPC.id*
+		x security_group.bastion.id*
+		x security_group.front.id*
+		x security_group.db.id*
 
-		x subnet.private.id
+		x subnet.private.id*
 
-		- ami.application
+		- ami.application*
 
-		- use existing NAT = true/false, nat.id
-			- depends on internet gateway
-		- number of passenger instances
+		- use existing NAT = true/false, nat.id*
+			- depends on internet gateway*
+		- number of passenger instances*
 	Output:
 		- security_group.app.id
 		- instance(s).private_ip [[for Ansible inventory]]
 
 MySQL-database -
 	Input: you know what it is
-		x VPC.id
-		x security_group.bastion.id
-		x security_group.front.id
-		x security_group.app.id
+		x VPC.id*
+		x security_group.bastion.id*
+		x security_group.front.id*
+		x security_group.app.id*
 
-		x subnet.private.id
+		x subnet.private.id*
 
-		- ami.database
+		- ami.database*
 
-		- use existing NAT = true/false, nat.id
-		- we're gonna make this a consistent 1 or 2 to start, so no # param
+		- use existing NAT = true/false, nat.id*
+		- we're gonna make this a consistent 1 or 2 to start, so no # param*
 	Output:
 		- security_group.db.id
 		- instance(s).private_ip [[for Ansible inventory]]

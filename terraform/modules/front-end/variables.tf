@@ -41,6 +41,10 @@ variable "num_cache" {
   default     = 1
 }
 
+variable "igw" {
+  description = "ID of Internet Gateway for public subnet"
+}
+
 //not sure if this is needed, will revisit after other modules complete (esp. VPC module)
 variable "nat_present" {
   description = "whether a NAT has been created"
