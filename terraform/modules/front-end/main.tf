@@ -1,6 +1,6 @@
 resource "aws_instance" "proxy" {
   //Default us-west-2 Ubuntu 16.04
-  count = ${ var.num_proxy }
+  count = "${ var.num_proxy }"
   ami                    = "ami-09b42c38b449cfa59"
   instance_type          = "t2.micro"
   subnet_id              = "${ var.subnet }"
@@ -11,7 +11,7 @@ resource "aws_instance" "proxy" {
 
   tags = {
     Project = "devopslab1"
-    Name    = "reverse proxy"
+    Name    = "reverse proxy ${count.index}"
   }
 }
 
@@ -24,11 +24,11 @@ resource "aws_instance" "cache" {
   key_name               = "worktop-general"
   vpc_security_group_ids = "${ aws_security_group.front.id }"
 
-  depends_on = ["var.igw"]
+  depends_on = ["${ var.igw }"]
 
   tags = {
     Project = "devopslab1"
-    Name    = "cache"
+    Name    = "cache ${count.index}"
   }
 }
 

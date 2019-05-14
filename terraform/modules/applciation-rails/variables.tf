@@ -24,7 +24,7 @@ variable "subnet" {
 // this can end up being a map with multiple amis if doing a microservicey type thing
 variable "ami_application" {
   description = "AMI ID to be used with reverse proxy instances (NGINX)."
-  default     = ""                                                        // TODO lookup Ubuntu 16.04 for dry run
+  default     = "ami-09b42c38b449cfa59"                                   // TODO lookup Ubuntu 16.04 for dry run
 }
 
 variable "num_passenger" {
