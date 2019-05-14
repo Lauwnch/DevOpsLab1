@@ -7,7 +7,8 @@ resource "aws_instance" "proxy" {
   key_name               = "worktop-general"
   vpc_security_group_ids = "${ aws_security_group.front.id }"
 
-  depends_on = ["var.igw"]
+  //cross-module/module-module dependency not supported
+  //depends_on = ["${ var.igw }"]
 
   tags = {
     Project = "devopslab1"
@@ -24,7 +25,8 @@ resource "aws_instance" "cache" {
   key_name               = "worktop-general"
   vpc_security_group_ids = "${ aws_security_group.front.id }"
 
-  depends_on = ["${ var.igw }"]
+  //cross-module/module-module dependency not supported
+  //depends_on = ["${ var.igw }"]
 
   tags = {
     Project = "devopslab1"

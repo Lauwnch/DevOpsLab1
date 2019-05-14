@@ -36,7 +36,7 @@ Front-end* -
 		- security_group.front.id*
 		- instance(s).private_ip [[for Ansible inventory]]*
 
-Bastion -
+Bastion* -
 	Definition: gateway for backend SSH and config management stuff
 	Input:
 		x VPC.id*
@@ -51,10 +51,10 @@ Bastion -
 		- we gon' stick with 1 on this one*
 
 	Output:
-		- security_group.bastion.id
-		- instance(s).private_ip [[for Ansible inventory]]		
+		- security_group.bastion.id*
+		- instance(s).private_ip [[for Ansible inventory]]*	
 
-Back-Rails-Application -
+Back-Rails-Application* -
 	Definition: passenger instance(s) for running Rails applications, security group for these, route table for private subnet
 	Input:
 		x VPC.id*
@@ -70,8 +70,8 @@ Back-Rails-Application -
 			- depends on internet gateway*
 		- number of passenger instances*
 	Output:
-		- security_group.app.id
-		- instance(s).private_ip [[for Ansible inventory]]
+		- security_group.app.id*
+		- instance(s).private_ip [[for Ansible inventory]]*
 
 MySQL-database -
 	Input: you know what it is

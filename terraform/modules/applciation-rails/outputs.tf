@@ -1,14 +1,11 @@
-- security_group.app.id
-- instance(s).private_ip [[for Ansible inventory]]
-
 output "secuity_id_app" {
-	value = "${ aws_security_group.app.id }"
+  value = "${ aws_security_group.app.id }"
 }
 
 output "app_ip_private" {
-	value = "${ aws_instance.application.*.private_ip}"
+  value = "${ aws_instance.application[*].private_ip}"
 }
 
 output "app_id" {
-	value = "${ aws_instance.application.*.id}"
+  value = "${ aws_instance.application[*].id}"
 }
