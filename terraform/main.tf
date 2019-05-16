@@ -82,10 +82,3 @@ resource "aws_eip" "nat" {
 
   depends_on = ["aws_internet_gateway.front"]
 }
-
-resource "aws_eip" "front" {
-  vpc      = true
-  instance = "${ aws_instance.proxy.id }"
-
-  depends_on = ["aws_internet_gateway.front"]
-}

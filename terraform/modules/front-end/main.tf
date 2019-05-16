@@ -1,6 +1,6 @@
 resource "aws_instance" "proxy" {
   //Default us-west-2 Ubuntu 16.04
-  count = "${ var.num_proxy }"
+  count = var.num_proxy
   ami                    = "ami-09b42c38b449cfa59"
   instance_type          = "t2.micro"
   subnet_id              = "${ var.subnet }"
@@ -18,7 +18,7 @@ resource "aws_instance" "proxy" {
 
 resource "aws_instance" "cache" {
   //Default us-west-2 Ubuntu 16.04
-  count = ${ var.num_cache }
+  count                  = var.num_cache
   ami                    = "ami-09b42c38b449cfa59"
   instance_type          = "t2.micro"
   subnet_id              = "${ var.subnet }"
@@ -32,6 +32,14 @@ resource "aws_instance" "cache" {
     Project = "devopslab1"
     Name    = "cache ${count.index}"
   }
+}
+
+resource "aws_eip" "proxy" {
+  count    = var.num_proxy
+  vpc      = true
+  instance = "${ aws_instance.proxy[count.index].id }"
+
+  depends_on = [" var.igw "]
 }
 
 resource "aws_security_group" "front" {
