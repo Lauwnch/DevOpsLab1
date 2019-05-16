@@ -87,5 +87,5 @@ MySQL-database -
 		- use existing NAT = true/false, nat.id*
 		- we're gonna make this a consistent 1 or 2 to start, so no # param*
 	Output:
-		- security_group.db.id
-		- instance(s).private_ip [[for Ansible inventory]]
+		- security_group.db.id*
+		- instance(s).private_ip [[for Ansible inventory]]*
