@@ -28,6 +28,5 @@ variable "ami_bastion" {
 
 variable "allowed_cidrs" {
   description = "CIDR blocks allowed to SSH to bastion"
-  type        = list(string)
-  default     = "default value"
+  type        = "list"
 }

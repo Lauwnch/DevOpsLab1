@@ -28,29 +28,21 @@ variable "ami_database" {
 
 variable "ami_db" {
   description = "AMI ID to be used with cache instances (redis)."
-  default     = "ami-09b42c38b449cfa59"                                                // TODO lookup Ubuntu 16.04 for dry run
+  default     = "ami-09b42c38b449cfa59"                           // TODO lookup Ubuntu 16.04 for dry run
 }
 
 variable "num_databases" {
   description = "Number of databases instances needed"
   default     = 1
-  type        = number
 }
 
-variable "private_ip" {
+variable "private_ips" {
   description = "Private IP of Database(s). Must be same length as count"
-  default     = "default value"
-  type        = list(string)
+  type        = "list"
 }
 
 //not sure if this is needed, will revisit after other modules complete (esp. VPC module)
 variable "nat_bool" {
   description = "Whether a NAT is being used"
   default     = true
-  type        = bool
-}
-
-variable "nat_id" {
-  description = "ID of NAT being used for back-end routing, if present"
-  default     = ""
 }

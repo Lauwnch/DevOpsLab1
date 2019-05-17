@@ -1,5 +1,5 @@
 output "security_id" {
-  value = "${ aws_security_group.front.id }"
+  value = "${ aws_security_group.bastion.id }"
 }
 
 output "bastion_ip_public" {

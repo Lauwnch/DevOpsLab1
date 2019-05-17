@@ -48,6 +48,5 @@ variable "igw" {
 //not sure if this is needed, will revisit after other modules complete (esp. VPC module)
 variable "nat_present" {
   description = "whether a NAT has been created"
-  type        = bool
   default     = true
 }
