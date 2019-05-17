@@ -1,11 +1,11 @@
 resource "aws_instance" "database" {
   //Default us-west-2 Ubuntu 16.04
   count                  = "${ var.num_databases }"
-  ami                    = "${ var.ami_database }"
+  ami                    = "${ var.ami_db }"
   instance_type          = "t2.micro"
   subnet_id              = "${ var.subnet }"
   key_name               = "worktop-general"
-  vpc_security_group_ids = "${ aws_security_group.db.id }"
+  vpc_security_group_ids = ["${ aws_security_group.db.id }"]
   private_ip             = "${ var.private_ips[count.index] }"
 
   tags = {
@@ -21,49 +21,55 @@ resource "aws_security_group" "db" {
 }
 
 resource "aws_security_group_rule" "mysql_from_app" {
-  type            = "ingress"
-  protocol        = "tcp"
-  from_port       = "3306"
-  to_port         = "3306"
-  security_groups = "${ var.security_id_app }"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "3306"
+  to_port                  = "3306"
+  source_security_group_id = "${ var.security_id_app }"
+  security_group_id        = "${ aws_security_group.db.id }"
 }
 
 resource "aws_security_group_rule" "ssh_from_bastion" {
-  type            = "ingress"
-  protocol        = "tcp"
-  from_port       = "22"
-  to_port         = "22"
-  security_groups = "${ var.security_id_bastion }"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "22"
+  to_port                  = "22"
+  source_security_group_id = "${ var.security_id_bastion }"
+  security_group_id        = "${ aws_security_group.db.id }"
 }
 
 resource "aws_security_group_rule" "tcp_self" {
-  type      = "ingress"
-  protocol  = "tcp"
-  self      = true
-  from_port = "0"
-  to_port   = "0"
+  type              = "ingress"
+  protocol          = "tcp"
+  self              = true
+  from_port         = "0"
+  to_port           = "0"
+  security_group_id = "${ aws_security_group.db.id }"
 }
 
 resource "aws_security_group_rule" "http_out" {
-  type        = "egress"
-  protocol    = "tcp"
-  from_port   = "80"
-  to_port     = "80"
-  cidr_blocks = "0.0.0.0/0"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = "80"
+  to_port           = "80"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${ aws_security_group.db.id }"
 }
 
 resource "aws_security_group_rule" "https_out" {
-  type        = "egress"
-  protocol    = "tcp"
-  from_port   = "443"
-  to_port     = "443"
-  cidr_blocks = "0.0.0.0/0"
+  type              = "egress"
+  protocol          = "tcp"
+  from_port         = "443"
+  to_port           = "443"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${ aws_security_group.db.id }"
 }
 
 resource "aws_security_group_rule" "ping" {
-  type        = "egress"
-  protocol    = "icmp"
-  from_port   = "8"
-  to_port     = "8"
-  cidr_blocks = "10.0.0.0/8"
+  type              = "egress"
+  protocol          = "icmp"
+  from_port         = "8"
+  to_port           = "8"
+  cidr_blocks       = ["10.0.0.0/8"]
+  security_group_id = "${ aws_security_group.db.id }"
 }

@@ -21,11 +21,6 @@ variable "subnet" {
   description = "ID of subnet in which to place resources (private)"
 }
 
-variable "ami_database" {
-  description = "AMI ID to be used with database instances (MYSQL)."
-  default     = ""                                                   // TODO lookup Ubuntu 16.04 for dry run
-}
-
 variable "ami_db" {
   description = "AMI ID to be used with cache instances (redis)."
   default     = "ami-09b42c38b449cfa59"                           // TODO lookup Ubuntu 16.04 for dry run

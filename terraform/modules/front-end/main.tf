@@ -5,7 +5,7 @@ resource "aws_instance" "proxy" {
   instance_type          = "t2.micro"
   subnet_id              = "${ var.subnet }"
   key_name               = "worktop-general"
-  vpc_security_group_ids = "${ aws_security_group.front.id }"
+  vpc_security_group_ids = ["${ aws_security_group.front.id }"]
 
   //cross-module/module-module dependency not supported
   //depends_on = ["${ var.igw }"]
@@ -23,7 +23,7 @@ resource "aws_instance" "cache" {
   instance_type          = "t2.micro"
   subnet_id              = "${ var.subnet }"
   key_name               = "worktop-general"
-  vpc_security_group_ids = "${ aws_security_group.front.id }"
+  vpc_security_group_ids = ["${ aws_security_group.front.id }"]
 
   //cross-module/module-module dependency not supported
   //depends_on = ["${ var.igw }"]
@@ -53,7 +53,7 @@ resource "aws_security_group_rule" "http_in" {
   protocol          = "tcp"
   from_port         = "80"
   to_port           = "80"
-  cidr_blocks       = "0.0.0.0/0"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${ aws_security_group.front.id }"
 }
 
@@ -62,7 +62,7 @@ resource "aws_security_group_rule" "https_in" {
   protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
-  cidr_blocks       = "0.0.0.0/0"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${ aws_security_group.front.id }"
 }
 
@@ -71,17 +71,17 @@ resource "aws_security_group_rule" "ssh_home" {
   protocol          = "tcp"
   from_port         = "22"
   to_port           = "22"
-  cidr_blocks       = "24.92.129.23/32"
+  cidr_blocks       = ["24.92.129.23/32"]
   security_group_id = "${ aws_security_group.front.id }"
 }
 
 resource "aws_security_group_rule" "ssh_bastion" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "22"
-  to_port           = "22"
-  security_group    = "${ var.security_id_bastion }"
-  security_group_id = "${ aws_security_group.front.id }"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "22"
+  to_port                  = "22"
+  source_security_group_id = "${ var.security_id_bastion }"
+  security_group_id        = "${ aws_security_group.front.id }"
 }
 
 resource "aws_security_group_rule" "http_out" {
@@ -89,7 +89,7 @@ resource "aws_security_group_rule" "http_out" {
   protocol          = "tcp"
   from_port         = "80"
   to_port           = "80"
-  cidr_blocks       = "0.0.0.0/0"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${ aws_security_group.front.id }"
 }
 
@@ -98,15 +98,15 @@ resource "aws_security_group_rule" "https_out" {
   protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
-  cidr_blocks       = "0.0.0.0/0"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${ aws_security_group.front.id }"
 }
 
 resource "aws_security_group_rule" "db_out" {
-  type              = "egress"
-  protocol          = "tcp"
-  from_port         = "3306"
-  to_port           = "3306"
-  security_groups   = "${ var.security_id_db }"
-  security_group_id = "${ aws_security_group.front.id }"
+  type                     = "egress"
+  protocol                 = "tcp"
+  from_port                = "3306"
+  to_port                  = "3306"
+  source_security_group_id = "${ var.security_id_db }"
+  security_group_id        = "${ aws_security_group.front.id }"
 }

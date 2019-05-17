@@ -4,7 +4,7 @@ resource "aws_instance" "application" {
   instance_type          = "t2.micro"
   subnet_id              = "${ var.subnet }"
   key_name               = "worktop-general"
-  vpc_security_group_ids = "${ aws_security_group.app.id }"
+  vpc_security_group_ids = ["${ aws_security_group.app.id }"]
 
   tags = {
     Project = "devopslab1"
@@ -19,30 +19,30 @@ resource "aws_security_group" "app" {
 }
 
 resource "aws_security_group_rule" "ssh_bastion" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "22"
-  to_port           = "22"
-  security_groups   = "${ var.security_id_bastion }"
-  security_group_id = "${ aws_security_group.app.id }"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "22"
+  to_port                  = "22"
+  source_security_group_id = "${ var.security_id_bastion }"
+  security_group_id        = "${ aws_security_group.app.id }"
 }
 
 resource "aws_security_group_rule" "http_in_proxy" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "80"
-  to_port           = "80"
-  security_groups   = "${ var.security_id_front }"
-  security_group_id = "${ aws_security_group.app.id }"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "80"
+  to_port                  = "80"
+  source_security_group_id = "${ var.security_id_front }"
+  security_group_id        = "${ aws_security_group.app.id }"
 }
 
 resource "aws_security_group_rule" "https_in_proxy" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = "443"
-  to_port           = "443"
-  security_groups   = "${ var.security_id_front }"
-  security_group_id = "${ aws_security_group.app.id }"
+  type                     = "ingress"
+  protocol                 = "tcp"
+  from_port                = "443"
+  to_port                  = "443"
+  source_security_group_id = "${ var.security_id_front }"
+  security_group_id        = "${ aws_security_group.app.id }"
 }
 
 resource "aws_security_group_rule" "http_out" {
@@ -50,7 +50,7 @@ resource "aws_security_group_rule" "http_out" {
   protocol          = "tcp"
   from_port         = "80"
   to_port           = "80"
-  cidr_blocks       = "0.0.0.0/0"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${ aws_security_group.app.id }"
 }
 
@@ -59,7 +59,7 @@ resource "aws_security_group_rule" "https_out" {
   protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
-  cidr_blocks       = "0.0.0.0/0"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${ aws_security_group.app.id }"
 }
 
@@ -68,7 +68,7 @@ resource "aws_security_group_rule" "ping" {
   protocol          = "icmp"
   from_port         = "8"
   to_port           = "8"
-  cidr_blocks       = "10.0.0.0/8"
+  cidr_blocks       = ["10.0.0.0/8"]
   security_group_id = "${ aws_security_group.app.id }"
 }
 
@@ -79,6 +79,6 @@ resource "aws_security_group_rule" "db_out" {
   to_port   = "3306"
 
   //if this dep creates problems, can refactor by making this rule seperately defined, or by defining CIDR block and initating instance within it
-  security_groups   = "${ var.security_id_db }"
-  security_group_id = "${ aws_security_group.app.id }"
+  source_security_group_id = "${ var.security_id_db }"
+  security_group_id        = "${ aws_security_group.app.id }"
 }
