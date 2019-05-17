@@ -1,84 +1,39 @@
-provider "aws" {
-  region = "us-west-2"
+module "front" {
+  source = "./front-end"
+
+  vpc                  = "${ aws_vpc.project_network.id }"
+  subnet               = "${ aws_subnet.public.id }"
+  security_id_app      = "${ module.app.security_id }"
+  security_id_bastion  = "${ module.bastion.security_id }"
+  security_id_database = "${ module.database.security_id }"
+
+  igw = "${ aws_internet_gateway.front.id }"
 }
 
-resource "aws_vpc" "project_network" {
-  cidr_block = "10.0.0.0/16"
+module "app" {
+  source = "./application-rails"
 
-  tags = {
-    Project = "devopslab1"
-    Name    = "main"
-  }
+  subnet               = "${ aws_subnet.private.id }"
+  security_id_front    = "${ module.front.security_id }"
+  security_id_bastion  = "${ module.bastion.security_id }"
+  security_id_database = "${ module.database.security_id }"
 }
 
-//eventually will replicate this on a second AZ
-resource "aws_subnet" "public" {
-  vpc_id     = "${ aws_vpc.project_network.id }"
-  cidr_block = "10.0.1.0/24"
+module "bastion" {
+  source = "./bastion"
 
-  tags = {
-    Project = "devopslab1"
-    Name    = "public subnet"
-  }
+  subnet               = "${ aws_subnet.public.id }"
+  security_id_front    = "${ module.front.security_id }"
+  security_id_app      = "${ module.app.security_id }"
+  security_id_database = "${ module.database.security_id }"
+  allowed_cidrs        = ["24.92.129.23/32"]
 }
 
-//eventually will replicate this on a second AZ
-resource "aws_subnet" "private" {
-  vpc_id     = "${ aws_vpc.project_network.id }"
-  cidr_block = "10.0.100.0/24"
+module "database" {
+  source = "./database-mysql"
 
-  tags = {
-    Project = "devopslab1"
-    Name    = "private subnet"
-  }
-}
-
-resource "aws_internet_gateway" "front" {
-  vpc_id = "${ aws_vpc.project_network.id }"
-}
-
-resource "aws_nat_gateway" "app" {
-  allocation_id = "${ aws_eip.nat.id }"
-  subnet_id     = "${ aws_subnet.private.id }"
-
-  depends_on = ["aws_internet_gateway.front"]
-
-  tags = {
-    Project = "devopslab1"
-    Name    = "application nat"
-  }
-}
-
-resource "aws_route_table" "public" {
-  vpc_id = "${ aws_vpc.project_network.id }"
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${ aws_internet_gateway.front.id }"
-  }
-}
-
-resource "aws_route_table_association" "public" {
-  subnet_id          = "${ aws_subnet.public.id }"
-  aws_route_table_id = "${ aws_route_table.public.id }"
-}
-
-resource "aws_route_table" "private" {
-  vpc_id = "${ aws_vpc.project_network.id }"
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${ aws_nat_gateway.app.id }"
-  }
-}
-
-resource "aws_route_table_association" "private" {
-  subnet_id          = "${ aws_subnet.private.id }"
-  aws_route_table_id = "${ aws_route_table.private.id }"
-}
-
-resource "aws_eip" "nat" {
-  vpc = true
-
-  depends_on = ["aws_internet_gateway.front"]
+  subnet              = "${ aws_subnet.private.id }"
+  security_id_front   = "${ module.front.security_id }"
+  security_id_app     = "${ module.app.security_id }"
+  security_id_bastion = "${ module.bastion.security_id }"
 }

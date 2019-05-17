@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "us-west-2"
+}
+
 resource "aws_vpc" "project_network" {
   cidr_block = "10.0.0.0/16"
 
@@ -75,13 +79,6 @@ resource "aws_route_table_association" "private" {
 
 resource "aws_eip" "nat" {
   vpc = true
-
-  depends_on = ["aws_internet_gateway.front"]
-}
-
-resource "aws_eip" "front" {
-  vpc      = true
-  instance = "${ aws_instance.proxy.id }"
 
   depends_on = ["aws_internet_gateway.front"]
 }

@@ -23,7 +23,7 @@ variable "subnet" {
 
 variable "ami_proxy" {
   description = "AMI ID to be used with reverse proxy instances (NGINX)."
-  default     = ""                                                        // TODO lookup Ubuntu 16.04 for dry run
+  default     = "ami-09b42c38b449cfa59"                                   // TODO lookup Ubuntu 16.04 for dry run
 }
 
 variable "num_proxy" {
@@ -33,7 +33,7 @@ variable "num_proxy" {
 
 variable "ami_cache" {
   description = "AMI ID to be used with cache instances (redis)."
-  default     = ""                                                // TODO lookup Ubuntu 16.04 for dry run
+  default     = "ami-09b42c38b449cfa59"                           // TODO lookup Ubuntu 16.04 for dry run
 }
 
 variable "num_cache" {
@@ -48,5 +48,6 @@ variable "igw" {
 //not sure if this is needed, will revisit after other modules complete (esp. VPC module)
 variable "nat_present" {
   description = "whether a NAT has been created"
-  default     = 1
+  type        = bool
+  default     = true
 }

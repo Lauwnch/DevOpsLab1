@@ -1,4 +1,4 @@
-output "security_id_bastion " {
+output "security_id" {
   value = "${ aws_secuity_group.db.id }"
 }
 

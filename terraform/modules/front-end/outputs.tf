@@ -1,4 +1,4 @@
-output "security_id_front" {
+output "security_id" {
   value = "${ aws_security_group.front.id }"
 }
 
